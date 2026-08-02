@@ -181,6 +181,28 @@
           </div>
           <button class="btn btn-p" style="width:100%" onclick="applyVolume()">Terapkan volume</button>
         </div>
+
+        <div class="sec-title" style="margin-top:14px">Upload MP3 baru</div>
+        <div class="card">
+          <div style="font-size:11px;color:var(--amber-text);margin-bottom:10px;line-height:1.6">
+            ⚠️ Khusus fitur ini perlu terhubung ke WiFi sekolah yang sama dengan ESP32 komplek ini.
+          </div>
+          <div style="margin-bottom:10px">
+            <div style="font-size:12px;color:var(--text2);margin-bottom:5px">IP lokal ESP32 (lihat Serial Monitor)</div>
+            <input type="text" id="uploadIp" placeholder="192.168.x.x">
+          </div>
+          <div style="margin-bottom:10px">
+            <div style="font-size:12px;color:var(--text2);margin-bottom:5px">Nama tampilan (mis. "Bel Masuk")</div>
+            <input type="text" id="uploadName" placeholder="Nama kegiatan/bel">
+          </div>
+          <div style="margin-bottom:10px">
+            <input type="file" id="uploadFile" accept="audio/mpeg,.mp3">
+          </div>
+          <button class="btn btn-p" style="width:100%" onclick="uploadAudioFile()">Upload ke ESP32</button>
+          <div style="margin-top:8px;display:none" id="uploadProgWrap">
+            <div style="font-size:11px;color:var(--text2)" id="uploadProgLbl"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
