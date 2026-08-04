@@ -51,14 +51,21 @@ window.doLogout = async function () {
   await signOut(auth);
 };
 
+document.addEventListener('DOMContentLoaded', ()=>{
+  const passEl=document.getElementById('loginPass');
+  if(passEl) passEl.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+  const emailEl=document.getElementById('loginEmail');
+  if(emailEl) emailEl.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+});
+
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('mainApp').style.display = 'block';
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('mainApp').classList.remove('hidden');
     startApp();
   } else {
-    document.getElementById('loginScreen').style.display = 'flex';
-    document.getElementById('mainApp').style.display = 'none';
+    document.getElementById('loginScreen').classList.remove('hidden');
+    document.getElementById('mainApp').classList.add('hidden');
   }
 });
 
@@ -549,7 +556,7 @@ window.uploadAudioFile = async function(){
   const btn=event.target;
   const progWrap=document.getElementById('uploadProgWrap');
   const progLbl=document.getElementById('uploadProgLbl');
-  progWrap.style.display='block';
+  progWrap.classList.add('show');
 
   btn.disabled=true; btn.textContent='Membaca durasi...';
   const dur = await getAudioDuration(file);
@@ -578,7 +585,7 @@ window.uploadAudioFile = async function(){
     progLbl.textContent='Gagal: '+e.message;
   }
   btn.disabled=false; btn.textContent='Upload ke ESP32';
-  setTimeout(()=>{progWrap.style.display='none';},4000);
+  setTimeout(()=>{progWrap.classList.remove('show');},4000);
 };
 
 // ═══════════════════════════════════════════════════════════════
