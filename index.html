@@ -3,37 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sistem Bel Otomatis Online</title>
+<title>Sistem Bel Otomatis — Online</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <!-- Layar login -->
 <div class="login-screen" id="loginScreen">
-  <div class="login-box">
-    <div class="title" style="margin-bottom:2px">Sistem Bel Otomatis</div>
-    <div class="subtitle" style="margin-bottom:1.25rem">Masuk untuk mengelola 4 komplek</div>
-    <input type="email" id="loginEmail" placeholder="Email admin" style="margin-bottom:8px">
-    <input type="password" id="loginPass" placeholder="Password" style="margin-bottom:14px">
-    <button class="btn btn-p" style="width:100%" onclick="doLogin()">Masuk</button>
-    <div id="loginErr" style="color:var(--red-text);font-size:12px;margin-top:10px"></div>
+  <div class="login-wrap">
+    <div class="brand brand-login">Pondok Pesantren Al-Hidayah</div>
+    <div class="login-box">
+      <div class="title">Sistem Bel Otomatis</div>
+      <div class="subtitle">Masuk untuk mengelola 4 komplek</div>
+      <form onsubmit="return false">
+        <input type="email" id="loginEmail" placeholder="Email admin">
+        <input type="password" id="loginPass" placeholder="Password">
+        <button type="submit" class="btn btn-p btn-block" onclick="doLogin()">Masuk</button>
+      </form>
+      <div class="login-err" id="loginErr"></div>
+    </div>
   </div>
 </div>
 
-<div class="wrap" id="mainApp" style="display:none">
+<div class="wrap hidden" id="mainApp">
 
   <!-- Header -->
   <div class="header">
     <div>
       <div class="title">Sistem Bel Otomatis</div>
-      <div class="subtitle">Kontrol online Firebase Realtime</div>
+      <div class="subtitle">Kontrol online — Firebase Realtime</div>
     </div>
-    <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
-      <div class="conn-dot" id="connDot" style="background:#e24b4a;box-shadow:none"></div>
+    <div class="header-actions">
+      <div class="conn-dot" id="connDot"></div>
       <span class="conn-lbl" id="connLbl">Menghubungkan...</span>
-      <button class="btn btn-sm" style="margin-left:10px" onclick="doLogout()">Keluar</button>
+      <button class="btn btn-sm" onclick="doLogout()">Keluar</button>
     </div>
   </div>
+
+  <!-- Nama pesantren -->
+  <div class="brand brand-app">Pondok Pesantren Al-Hidayah</div>
 
   <!-- Selector komplek -->
   <div class="komplek-select" id="komplekSelect"></div>
@@ -53,16 +61,16 @@
       <div>
         <div class="clock-time" id="clockTime">00:00:00</div>
         <div class="clock-status">
-          <div class="conn-dot" style="width:6px;height:6px;background:var(--green)"></div>
-          <span style="font-size:11px;color:var(--text2)" id="clockSrcLbl">Waktu perangkat (ESP32, via Firebase)</span>
+          <div class="dot-sm dot-green"></div>
+          <span class="conn-lbl" id="clockSrcLbl">Waktu perangkat (ESP32, via Firebase)</span>
         </div>
       </div>
       <div class="clock-right">
         <div class="clock-day" id="clockDay">-</div>
         <div class="clock-date" id="clockDate">-</div>
-        <div style="margin-top:6px;display:flex;align-items:center;gap:5px;justify-content:flex-end">
-          <div style="width:6px;height:6px;border-radius:50%;background:#4b5563" id="ampliDot"></div>
-          <span style="font-size:11px;color:var(--text2)" id="ampliLbl">Amplifier OFF</span>
+        <div class="clock-ampli-row">
+          <div class="dot-sm" id="ampliDot"></div>
+          <span class="conn-lbl" id="ampliLbl">Amplifier OFF</span>
         </div>
       </div>
     </div>
@@ -73,25 +81,25 @@
       <div class="metric"><div class="lbl">Nonaktif</div><div class="val" id="mNonaktif">-</div></div>
     </div>
     <div class="next-card" id="nextCard">
-      <div style="font-size:11px;color:var(--blue-text);opacity:.8;margin-bottom:4px">Bel berikutnya</div>
-      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-        <div style="font-size:26px;font-weight:500;color:var(--blue-text);font-family:var(--mono)" id="nTime">--:--</div>
+      <div class="next-card-head">Bel berikutnya</div>
+      <div class="next-card-body">
+        <div class="next-time" id="nTime">--:--</div>
         <div>
-          <div style="font-size:13px;color:var(--blue-text)" id="nLabel">-</div>
-          <div style="font-size:11px;color:var(--blue-text);opacity:.75" id="nTrack">-</div>
+          <div class="next-label" id="nLabel">-</div>
+          <div class="next-track" id="nTrack">-</div>
         </div>
-        <div style="margin-left:auto;text-align:right">
-          <div style="font-size:11px;color:var(--blue-text);opacity:.75;margin-bottom:4px" id="nCountdown">-</div>
+        <div class="next-actions">
+          <div class="next-countdown" id="nCountdown">-</div>
           <button class="btn-ring" onclick="ringNow()">Bunyikan sekarang</button>
         </div>
       </div>
     </div>
     <div class="card">
-      <div class="sec-title" style="margin-bottom:10px">Jadwal hari ini</div>
+      <div class="sec-title">Jadwal hari ini</div>
       <table class="tbl">
         <thead><tr>
-          <th style="width:60px">Jam</th><th>Keterangan</th>
-          <th style="width:130px">Track</th><th style="width:80px">Status</th>
+          <th class="w-60">Jam</th><th>Keterangan</th>
+          <th class="w-130">Track</th><th class="w-80">Status</th>
         </tr></thead>
         <tbody id="todayTbody"></tbody>
       </table>
@@ -100,8 +108,8 @@
 
   <!-- Jadwal -->
   <div class="panel" id="tab-jadwal">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;flex-wrap:wrap;gap:8px">
-      <div style="font-size:15px;font-weight:500">Edit jadwal per hari</div>
+    <div class="toolbar-row">
+      <div class="toolbar-title">Edit jadwal per hari</div>
       <div class="row">
         <button class="btn btn-sm" onclick="addEntry()">+ Tambah bel</button>
         <button class="btn btn-p btn-sm" onclick="saveAll()">Simpan semua</button>
@@ -109,44 +117,44 @@
     </div>
     <div class="day-tabs" id="dayTabs"></div>
     <div class="copy-row">
-      <span style="font-size:12px;color:var(--text2)">Salin ke:</span>
-      <select id="copyTarget" style="width:120px;font-size:12px;padding:4px 8px"><option value="">Pilih hari...</option></select>
+      <span class="conn-lbl">Salin ke:</span>
+      <select id="copyTarget"><option value="">Pilih hari...</option></select>
       <button class="btn btn-sm" onclick="copyToDay()">Salin jadwal</button>
       <button class="btn btn-sm btn-d" onclick="clearDay()">Hapus semua</button>
     </div>
-    <div class="card" style="padding:0;overflow:hidden">
-      <table class="tbl" style="table-layout:fixed">
+    <div class="card card-flush">
+      <table class="tbl tbl-fixed">
         <thead><tr>
-          <th style="width:90px;padding:8px">Jam</th>
-          <th style="width:140px">Keterangan</th>
-          <th style="width:120px">Track audio</th>
-          <th style="width:50px;text-align:center">Aktif</th>
-          <th style="width:36px"></th>
+          <th class="w-90">Jam</th>
+          <th class="w-140">Keterangan</th>
+          <th class="w-120">Track audio</th>
+          <th class="w-50 ta-center">Aktif</th>
+          <th class="w-36"></th>
         </tr></thead>
         <tbody id="editTbody"></tbody>
       </table>
     </div>
-    <div style="margin-top:.75rem;font-size:11px;color:var(--text2)">Tersimpan langsung ke <span style="font-family:var(--mono);font-size:11px">Firebase → devices/{komplek}/jadwal</span> — ESP32 menarik perubahan ini otomatis dalam beberapa detik.</div>
+    <div class="hint-text">Tersimpan langsung ke <code>Firebase → devices/{komplek}/jadwal</code> — ESP32 menarik perubahan ini otomatis dalam beberapa detik.</div>
   </div>
 
   <!-- Kegiatan -->
   <div class="panel" id="tab-kegiatan">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;flex-wrap:wrap;gap:8px">
-      <div style="font-size:15px;font-weight:500">Daftar Kegiatan</div>
+    <div class="toolbar-row">
+      <div class="toolbar-title">Daftar Kegiatan</div>
       <div class="row">
         <button class="btn btn-sm" onclick="addKegiatan()">+ Tambah</button>
         <button class="btn btn-p btn-sm" onclick="saveKegiatan()">Simpan</button>
       </div>
     </div>
-    <div style="font-size:12px;color:var(--text2);margin-bottom:.875rem">
+    <div class="desc-text">
       Kegiatan ini digunakan sebagai pilihan label pada tab Jadwal. Tersimpan di Firebase, ditarik otomatis oleh ESP32.
     </div>
-    <div class="card" style="padding:0;overflow:hidden">
-      <table class="tbl" style="table-layout:fixed">
+    <div class="card card-flush">
+      <table class="tbl tbl-fixed">
         <thead><tr>
-          <th style="width:40px;padding:8px;text-align:center">#</th>
-          <th style="padding:8px">Nama Kegiatan</th>
-          <th style="width:60px"></th>
+          <th class="w-40 ta-center">#</th>
+          <th>Nama Kegiatan</th>
+          <th class="w-60"></th>
         </tr></thead>
         <tbody id="kegiatanTbody"></tbody>
       </table>
@@ -155,52 +163,52 @@
 
   <!-- Audio -->
   <div class="panel" id="tab-audio">
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+    <div class="audio-grid">
       <div>
-        <div class="sec-title">Daftar Audio</div>
+        <div class="sec-title">DFPlayer Mini (perintah dikirim ke ESP32 via Firebase)</div>
         <div class="dfplayer" id="dfPanel"></div>
-        <div style="margin-top:8px">
-          <div style="display:flex;justify-content:space-between;font-size:11px;color:#6b7280;margin-bottom:4px">
+        <div class="audio-progress-row">
+          <div class="audio-time-row">
             <span id="tNow">0:00</span><span id="tTot">0:00</span>
           </div>
-          <div style="height:3px;background:#1f2937;border-radius:2px;overflow:hidden">
-            <div style="height:100%;background:var(--blue);border-radius:2px;transition:width .3s" id="progBar"></div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progBar"></div>
           </div>
         </div>
-        <div style="margin-top:8px"><button class="btn btn-sm" onclick="stopAudio()">&#9632; Stop</button></div>
+        <div class="audio-stop-row"><button class="btn btn-sm" onclick="stopAudio()">&#9632; Stop</button></div>
       </div>
       <div>
         <div class="sec-title">Pengaturan audio</div>
         <div class="card">
-          <div style="margin-bottom:12px">
-            <div style="font-size:12px;color:var(--text2);margin-bottom:5px">Volume (0–30)</div>
+          <div class="field">
+            <div class="field-label">Volume (0–30)</div>
             <div class="row">
-              <input type="range" min="0" max="30" value="20" step="1" id="volR" style="flex:1" oninput="document.getElementById('volN').textContent=this.value">
-              <span style="font-size:13px;font-weight:500;min-width:22px" id="volN">20</span>
+              <input type="range" min="0" max="30" value="20" step="1" id="volR" oninput="document.getElementById('volN').textContent=this.value">
+              <span id="volN">20</span>
             </div>
           </div>
-          <button class="btn btn-p" style="width:100%" onclick="applyVolume()">Terapkan volume</button>
+          <button class="btn btn-p btn-block" onclick="applyVolume()">Terapkan volume</button>
         </div>
 
-        <div class="sec-title" style="margin-top:14px">Upload MP3 baru</div>
+        <div class="sec-title warn mt">Upload MP3 baru</div>
         <div class="card">
-          <div style="font-size:11px;color:var(--amber-text);margin-bottom:10px;line-height:1.6">
-            ⚠️ Khusus fitur ini harus terhubung ke WiFi sekolah yang sama dengan ESP32 komplek ini.
+          <div class="upload-warn">
+            ⚠️ Khusus fitur ini perlu terhubung ke WiFi sekolah yang sama dengan ESP32 komplek ini.
           </div>
-          <div style="margin-bottom:10px">
-            <div style="font-size:12px;color:var(--text2);margin-bottom:5px">IP lokal ESP32 (lihat Serial Monitor)</div>
+          <div class="field">
+            <div class="field-label">IP lokal ESP32 (lihat Serial Monitor)</div>
             <input type="text" id="uploadIp" placeholder="192.168.x.x">
           </div>
-          <div style="margin-bottom:10px">
-            <div style="font-size:12px;color:var(--text2);margin-bottom:5px">Nama tampilan (mis. "Bel Masuk")</div>
+          <div class="field">
+            <div class="field-label">Nama tampilan (mis. "Bel Masuk")</div>
             <input type="text" id="uploadName" placeholder="Nama kegiatan/bel">
           </div>
-          <div style="margin-bottom:10px">
+          <div class="field">
             <input type="file" id="uploadFile" accept="audio/mpeg,.mp3">
           </div>
-          <button class="btn btn-p" style="width:100%" onclick="uploadAudioFile()">Upload ke ESP32</button>
-          <div style="margin-top:8px;display:none" id="uploadProgWrap">
-            <div style="font-size:11px;color:var(--text2)" id="uploadProgLbl"></div>
+          <button class="btn btn-p btn-block" onclick="uploadAudioFile()">Upload ke ESP32</button>
+          <div class="upload-prog" id="uploadProgWrap">
+            <div class="upload-prog-lbl" id="uploadProgLbl"></div>
           </div>
         </div>
       </div>
@@ -209,26 +217,26 @@
 
   <!-- JSON -->
   <div class="panel" id="tab-json">
-    <div style="font-size:15px;font-weight:500;margin-bottom:1rem">Backup & Data Jadwal</div>
-    <div class="card" style="margin-bottom:.875rem;border-color:#2d4a7a">
-      <div class="sec-title" style="color:var(--amber-text)">Backup & Restore</div>
-      <div style="font-size:12px;color:var(--text2);margin-bottom:.875rem;line-height:1.7">
+    <div class="toolbar-title json-title">Backup & Data Jadwal</div>
+    <div class="card">
+      <div class="sec-title warn">Backup & Restore</div>
+      <div class="desc-text">
         Backup langsung dari data Firebase komplek yang sedang dipilih. Restore akan menimpa jadwal + kegiatan komplek ini di Firebase (ESP32 menarik otomatis).
       </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-        <button class="btn btn-sm" style="border-color:var(--amber-text);color:var(--amber-text)" onclick="downloadBackup()">Unduh backup (.json)</button>
+      <div class="backup-actions">
+        <button class="btn btn-sm btn-warn" onclick="downloadBackup()">Unduh backup (.json)</button>
         <div>
           <button class="btn btn-sm btn-p" onclick="document.getElementById('restoreFile').click()">Restore dari file...</button>
-          <input type="file" id="restoreFile" accept=".json" style="display:none" onchange="restoreBackup(this)">
+          <input type="file" id="restoreFile" class="hidden-input" accept=".json" onchange="restoreBackup(this)">
         </div>
-        <span style="font-size:11px;color:var(--text2)" id="restoreStatus"></span>
+        <span class="conn-lbl" id="restoreStatus"></span>
       </div>
     </div>
-    <div class="card" style="margin-bottom:1rem">
+    <div class="card">
       <div class="sec-title">Pratinjau JSON (format jadwal.json)</div>
       <div class="json-box" id="jsonBox"></div>
     </div>
-    <div class="row" style="margin-bottom:1rem;flex-wrap:wrap;gap:8px">
+    <div class="row json-actions-row">
       <button class="btn" onclick="cpJSON()">Salin JSON</button>
       <button class="btn" onclick="dlJSON()">Unduh jadwal.json</button>
       <button class="btn btn-p" onclick="pushJSON()">Kirim ke Firebase</button>
