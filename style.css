@@ -32,6 +32,20 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14
 .conn-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;box-shadow:0 0 4px var(--green)}
 .conn-lbl{font-size:12px;color:var(--text2)}
 
+.title1{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin-bottom:1.25rem;
+  padding-bottom:1rem;
+  border-bottom:.5px solid var(--border)
+}
+.title2{
+  display:flex;
+  font-size: 26px;
+}
+
 /* Small status dots (reusable) */
 .dot-sm{width:6px;height:6px;border-radius:50%;background:#4b5563;flex-shrink:0}
 .dot-sm.dot-green{background:var(--green);box-shadow:0 0 4px var(--green)}
