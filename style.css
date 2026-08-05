@@ -14,16 +14,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14
 .wrap{max-width:760px;margin:0 auto;padding:1rem}
 .hidden{display:none !important}
 
-/* Brand — nama pesantren, dengan 2 garis di kiri-kanan teks */
+/* Brand — nama pesantren, garis pembatas di atas & bawah teks */
 .brand{
-  display:flex;align-items:center;gap:14px;
-  color:var(--text);font-weight:600;letter-spacing:1.5px;
-}
-.brand::before,.brand::after{
-  content:'';flex:1;height:1px;background:var(--border2);
+  text-align:center;color:var(--text);font-weight:600;letter-spacing:1.5px;
+  padding:12px 0;
+  border-top:.5px solid var(--border);
+  border-bottom:.5px solid var(--border);
 }
 .brand-login{font-size:13px;margin-bottom:16px;width:100%}
-.brand-app{font-size:13px;margin-bottom:14px;padding-bottom:14px;border-bottom:.5px solid var(--border)}
+.brand-app{font-size:13px;margin-bottom:14px}
 
 /* Header */
 .header{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:.5px solid var(--border)}
