@@ -32,7 +32,7 @@ const KOMPLEK = [
 
 const OFFLINE_THRESHOLD_MS = 20000;
 
-/ ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
 // LOGIN
 // ═══════════════════════════════════════════════════════════════
 // Sesi login BERTAHAN saat halaman di-refresh (tidak perlu klik "Masuk" lagi
