@@ -32,7 +32,7 @@ const KOMPLEK = [
 
 const OFFLINE_THRESHOLD_MS = 20000;
 
-// ═══════════════════════════════════════════════════════════════
+/ ═══════════════════════════════════════════════════════════════
 // LOGIN
 // ═══════════════════════════════════════════════════════════════
 // Sesi login BERTAHAN saat halaman di-refresh (tidak perlu klik "Masuk" lagi
@@ -96,6 +96,7 @@ onAuthStateChanged(auth, (user) => {
     signOut(auth);
     return;   // onAuthStateChanged akan terpanggil lagi dengan user=null
   }
+  document.getElementById('loadingScreen').classList.add('hidden');
   if (user) {
     markActive();
     document.getElementById('loginScreen').classList.add('hidden');
