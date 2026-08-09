@@ -46,18 +46,18 @@ window.doLogin = async function () {
     errEl.textContent = 'Login gagal — cek email/password.';
   }
 };
-
+ 
 window.doLogout = async function () {
   await signOut(auth);
 };
-
+ 
 document.addEventListener('DOMContentLoaded', ()=>{
   const passEl=document.getElementById('loginPass');
   if(passEl) passEl.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
   const emailEl=document.getElementById('loginEmail');
   if(emailEl) emailEl.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
 });
-
+ 
 onAuthStateChanged(auth, (user) => {
   if (user) {
     document.getElementById('loginScreen').classList.add('hidden');
@@ -68,31 +68,31 @@ onAuthStateChanged(auth, (user) => {
     document.getElementById('mainApp').classList.add('hidden');
   }
 });
-
+ 
 // ═══════════════════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════════════════
 const DAYS=['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
 const MONTHS=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 const TODAY_IDX=(new Date().getDay()+6)%7;
-
+ 
 let currentId = KOMPLEK[0].id;
 let activeListeners = []; // path-path onValue yang sedang aktif, untuk di-off saat ganti komplek
-
+ 
 let TRACKS=[
   {file:'001.mp3',name:'Bel standar',dur:180},
   {file:'002.mp3',name:'Istirahat panjang',dur:180},
   {file:'003.mp3',name:'Adzan / sholat',dur:180},
   {file:'004.mp3',name:'Bel pulang',dur:180},
 ];
-
+ 
 let schedule={}; DAYS.forEach((_,i)=>schedule[i]=[]);
 let activeDay=TODAY_IDX;
 let playTimer=null,curFile='',elapsed=0,curDur=0;
 let isRinging=false, ampliOn=false, deviceOnline=false;
 let kegiatanList=[];
 let appStarted=false;
-
+ 
 // ═══════════════════════════════════════════════════════════════
 // TOAST
 // ═══════════════════════════════════════════════════════════════
@@ -102,7 +102,7 @@ function toast(msg,dur=2200){
   clearTimeout(el._t);
   el._t=setTimeout(()=>el.classList.remove('show'),dur);
 }
-
+ 
 // ═══════════════════════════════════════════════════════════════
 // KOMPLEK SELECTOR
 // ═══════════════════════════════════════════════════════════════
@@ -129,14 +129,14 @@ window.selectKomplek = function(id){
   fillUploadIp();
   toast('Beralih ke '+ (KOMPLEK.find(k=>k.id===id)||{}).nama);
 };
-
+ 
 function fillUploadIp(){
   const ipInput=document.getElementById('uploadIp');
   if(!ipInput) return;
   const k=KOMPLEK.find(k=>k.id===currentId);
   ipInput.value = (k && k.localIp) || '';
 }
-
+ 
 // ═══════════════════════════════════════════════════════════════
 // SUBSCRIBE DATA REALTIME UNTUK KOMPLEK AKTIF
 // ═══════════════════════════════════════════════════════════════
@@ -144,15 +144,15 @@ function detachListeners(){
   activeListeners.forEach(p=>off(ref(db,p)));
   activeListeners=[];
 }
-
+ 
 function subscribeDevice(id){
   detachListeners();
-
+ 
   const pStatus = `devices/${id}/status`;
   const pJadwal = `devices/${id}/jadwal`;
   const pKeg    = `devices/${id}/kegiatan`;
   const pAudio  = `devices/${id}/audio`;
-
+ 
   onValue(ref(db,pStatus), snap=>{
     const s=snap.val();
     const dot=document.getElementById('connDot');
@@ -167,7 +167,7 @@ function subscribeDevice(id){
     }
     const chip=document.getElementById('chip-'+id);
     if(chip){ chip.classList.toggle('online',deviceOnline); chip.classList.toggle('offline',!deviceOnline); }
-
+ 
     const wasRinging=isRinging;
     isRinging = s?.isRinging || false;
     ampliOn   = s?.ampliOn   || false;
@@ -179,7 +179,7 @@ function subscribeDevice(id){
     if(wasRinging!==isRinging) renderDash();
   });
   activeListeners.push(pStatus);
-
+ 
   onValue(ref(db,pJadwal), snap=>{
     const d=snap.val();
     if(!d){ DAYS.forEach((_,i)=>schedule[i]=[]); renderAllViews(); return; }
@@ -194,7 +194,7 @@ function subscribeDevice(id){
     renderAllViews();
   });
   activeListeners.push(pJadwal);
-
+ 
   onValue(ref(db,pKeg), snap=>{
     const d=snap.val();
     kegiatanList = Array.isArray(d) ? d.map(k=>({nama:k.nama||k||''})) : [];
@@ -202,7 +202,7 @@ function subscribeDevice(id){
     if(document.getElementById('tab-jadwal').classList.contains('active')) renderEdit();
   });
   activeListeners.push(pKeg);
-
+ 
   onValue(ref(db,pAudio), snap=>{
     const d=snap.val();
     if(Array.isArray(d) && d.length>0){
@@ -212,13 +212,13 @@ function subscribeDevice(id){
   });
   activeListeners.push(pAudio);
 }
-
+ 
 function renderAllViews(){
   renderDash();
   if(document.getElementById('tab-jadwal').classList.contains('active')){ renderDayTabs(); renderEdit(); }
   if(document.getElementById('tab-json').classList.contains('active')) renderJSON();
 }
-
+ 
 // ═══════════════════════════════════════════════════════════════
 // COMMAND CHANNEL (play/stop/volume/ringNow) → ESP32 tarik & eksekusi
 // ═══════════════════════════════════════════════════════════════
@@ -226,7 +226,7 @@ async function sendCommand(action, params={}){
   const payload = { id: Date.now(), action, ...params };
   await set(ref(db, `devices/${currentId}/commands/current`), payload);
 }
-
+ 
 // ═══════════════════════════════════════════════════════════════
 // TABS
 // ═══════════════════════════════════════════════════════════════
@@ -240,12 +240,12 @@ window.gotoTab = function(t){
   if(t==='kegiatan'){renderKegiatan();}
   if(t==='json'){renderJSON();}
 };
-
+ 
 // ═══════════════════════════════════════════════════════════════
 // CLOCK
 // ═══════════════════════════════════════════════════════════════
 function pad2(n){return String(n).padStart(2,'0');}
-
+ 
 function updateClock(){
   const now=new Date();
   document.getElementById('clockTime').textContent=pad2(now.getHours())+':'+pad2(now.getMinutes())+':'+pad2(now.getSeconds());
@@ -258,7 +258,7 @@ function updateClock(){
     renderDash();
   }
 }
-
+ 
 function isDone(dayIdx,jam){
   if(dayIdx!==TODAY_IDX) return false;
   const now=new Date();
@@ -267,7 +267,7 @@ function isDone(dayIdx,jam){
   const nowMin=now.getHours()*60+now.getMinutes();
   return bh*60+bm < nowMin-1;
 }
-
+ 
 function updateCountdown(now){
   const el=document.getElementById('nCountdown');
   if(!el) return;
@@ -280,14 +280,14 @@ function updateCountdown(now){
   else if(diff<60) el.textContent='dalam '+diff+' menit';
   else el.textContent='dalam '+Math.floor(diff/60)+'j '+diff%60+'m';
 }
-
+ 
 function getBadge(e,isCurrent){
   if(isCurrent) return '<span class="badge b-ring">Bunyi</span>';
   if(e.done)    return '<span class="badge b-ok">Sudah</span>';
   if(e.active)  return '<span class="badge b-wait">Menunggu</span>';
   return '<span class="badge b-off">Nonaktif</span>';
 }
-
+ 
 // ═══════════════════════════════════════════════════════════════
 // DASHBOARD
 // ═══════════════════════════════════════════════════════════════
@@ -295,7 +295,7 @@ function trackName(id){
   const t=TRACKS.find(t=>t.file===String(id).padStart(3,'0')+'.mp3');
   return t?t.name:TRACKS[id-1]?TRACKS[id-1].name:'Track '+id;
 }
-
+ 
 function renderDash(){
   const today=schedule[TODAY_IDX]||[];
   const now=new Date();
@@ -328,7 +328,7 @@ function renderDash(){
     tbody.appendChild(tr);
   });
 }
-
+ 
 window.ringNow = async function(){
   const btn=event.target;
   const next=(schedule[TODAY_IDX]||[]).find(e=>e.active&&!e.done);
@@ -338,7 +338,7 @@ window.ringNow = async function(){
   toast('Perintah bunyi dikirim ke '+currentId);
   setTimeout(()=>{btn.textContent='Bunyikan sekarang';btn.disabled=false;},3000);
 };
-
+ 
 // ═══════════════════════════════════════════════════════════════
 // JADWAL EDITOR
 // ═══════════════════════════════════════════════════════════════
@@ -357,7 +357,7 @@ function renderDayTabs(){
     if(i!==activeDay){const opt=document.createElement('option');opt.value=i;opt.textContent=d;ct.appendChild(opt);}
   });
 }
-
+ 
 function renderEdit(){
   const tbody=document.getElementById('editTbody');
   const entries=schedule[activeDay]||[];
@@ -369,14 +369,14 @@ function renderEdit(){
   entries.forEach((e,i)=>{
     const tr=document.createElement('tr');
     if(!e.active) tr.style.opacity='0.4';
-
+ 
     const tdJam=document.createElement('td');
     const inpJam=document.createElement('input');
     inpJam.type='time'; inpJam.value=e.time;
     inpJam.disabled=!e.active;
     inpJam.onchange=()=>{ schedule[activeDay][i].time=inpJam.value; sortEntries(); };
     tdJam.appendChild(inpJam);
-
+ 
     const tdKeg=document.createElement('td');
     const selKeg=document.createElement('select');
     selKeg.disabled=!e.active;
@@ -394,7 +394,7 @@ function renderEdit(){
     }
     selKeg.onchange=()=>{ schedule[activeDay][i].label=selKeg.value; };
     tdKeg.appendChild(selKeg);
-
+ 
     const tdTrack=document.createElement('td');
     const selTrack=document.createElement('select');
     selTrack.disabled=!e.active;
@@ -406,7 +406,7 @@ function renderEdit(){
     });
     selTrack.onchange=()=>{ schedule[activeDay][i].track=+selTrack.value; };
     tdTrack.appendChild(selTrack);
-
+ 
     const tdChk=document.createElement('td');
     tdChk.style.textAlign='center';
     const chk=document.createElement('input');
@@ -420,19 +420,19 @@ function renderEdit(){
       renderDayTabs();
     };
     tdChk.appendChild(chk);
-
+ 
     const tdDel=document.createElement('td');
     const btnDel=document.createElement('button');
     btnDel.className='btn btn-sm btn-d';
     btnDel.innerHTML='&#x2715;';
     btnDel.onclick=()=>delEntry(i);
     tdDel.appendChild(btnDel);
-
+ 
     tr.append(tdJam,tdKeg,tdTrack,tdChk,tdDel);
     tbody.appendChild(tr);
   });
 }
-
+ 
 function sortEntries(){schedule[activeDay].sort((a,b)=>a.time.localeCompare(b.time));renderEdit();}
 window.addEntry = function(){
   if(!schedule[activeDay]) schedule[activeDay]=[];
@@ -451,13 +451,13 @@ window.clearDay = function(){
   if(!confirm('Hapus semua jadwal '+DAYS[activeDay]+'?')) return;
   schedule[activeDay]=[];renderEdit();renderDayTabs();
 };
-
+ 
 function scheduleToJadwalObj(){
   const out={};
   DAYS.forEach((d,i)=>{ out[d]=(schedule[i]||[]).map(e=>({jam:e.time,kegiatan:e.label,audio:e.track})); });
   return out;
 }
-
+ 
 window.saveAll = async function(){
   const btn=event.target;btn.textContent='Menyimpan...';btn.disabled=true;
   try{
@@ -470,12 +470,12 @@ window.saveAll = async function(){
   }
   setTimeout(()=>{btn.textContent='Simpan semua';btn.disabled=false;},2000);
 };
-
+ 
 // ═══════════════════════════════════════════════════════════════
 // AUDIO
 // ═══════════════════════════════════════════════════════════════
 function fmtDur(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
-
+ 
 function renderTracks(){
   const d=document.getElementById('dfPanel');
   d.innerHTML=TRACKS.map((t,i)=>`
@@ -486,7 +486,7 @@ function renderTracks(){
       <button class="df-play" id="dfp${i}" onclick="playTrackUi(${i},'${t.file}',${t.dur})">&#9654;</button>
     </div>`).join('');
 }
-
+ 
 window.playTrackUi = async function(idx,file,dur){
   if(curFile===file){window.stopAudio();return;}
   stopT();curFile=file;curDur=dur;elapsed=0;
@@ -502,20 +502,20 @@ window.playTrackUi = async function(idx,file,dur){
   await sendCommand('play',{file});
   toast('Perintah play dikirim: '+file);
 };
-
+ 
 function stopT(){
   clearInterval(playTimer);playTimer=null;curFile='';elapsed=0;
   document.querySelectorAll('.df-play').forEach(b=>{b.innerHTML='&#9654;';b.classList.remove('playing');});
   document.getElementById('progBar').style.width='0%';
   document.getElementById('tNow').textContent='0:00';
 }
-
+ 
 window.stopAudio = async function(){
   stopT();
   await sendCommand('stop');
   toast('Perintah stop dikirim');
 };
-
+ 
 window.applyVolume = async function(){
   const btn=event.target;btn.textContent='Menerapkan...';btn.disabled=true;
   const v=+document.getElementById('volR').value;
@@ -524,7 +524,7 @@ window.applyVolume = async function(){
   btn.textContent='Diterapkan!';
   setTimeout(()=>{btn.textContent='Terapkan volume';btn.disabled=false;},1800);
 };
-
+ 
 // ── Upload MP3 baru — LANGSUNG ke ESP32 lewat WiFi lokal ─────────
 // (Anda harus terhubung ke WiFi sekolah yang sama dengan ESP32 saat upload)
 function getAudioDuration(file){
@@ -537,7 +537,7 @@ function getAudioDuration(file){
     a.src=url;
   });
 }
-
+ 
 window.uploadAudioFile = async function(){
   const fileInput=document.getElementById('uploadFile');
   const nameInput=document.getElementById('uploadName');
@@ -548,35 +548,35 @@ window.uploadAudioFile = async function(){
   if(file.size > 8*1024*1024){ toast('Ukuran file terlalu besar (maks 8MB)'); return; }
   const ip=ipInput.value.trim();
   if(!ip){ toast('Isi dulu IP lokal ESP32 (lihat Serial Monitor)'); return; }
-
+ 
   const displayName = nameInput.value.trim() || file.name.replace(/\.mp3$/i,'');
   const nextNum = TRACKS.length + 1;
   const fileName = String(nextNum).padStart(3,'0')+'.mp3';
-
+ 
   const btn=event.target;
   const progWrap=document.getElementById('uploadProgWrap');
   const progLbl=document.getElementById('uploadProgLbl');
   progWrap.classList.add('show');
-
+ 
   btn.disabled=true; btn.textContent='Membaca durasi...';
   const dur = await getAudioDuration(file);
-
+ 
   btn.textContent='Mengunggah ke ESP32...';
   progLbl.textContent='Mengirim '+fileName+' ke '+ip+' ...';
-
+ 
   try{
     const fd=new FormData();
     fd.append('file', file, fileName);   // nama field 'file' HARUS cocok dgn firmware; nama file jadi target di SD
-
+ 
     const res=await fetch(`http://${ip}/upload-audio`, { method:'POST', body:fd });
     const text=await res.text();
-
+ 
     if(!res.ok){ throw new Error(text||('HTTP '+res.status)); }
-
+ 
     // Upload ke ESP32 berhasil → catat metadata di Firebase supaya dashboard & LCD ikut update
     const newTracks=[...TRACKS, {file:fileName, name:displayName, dur}];
     await set(ref(db, `devices/${currentId}/audio`), newTracks);
-
+ 
     toast('Upload berhasil: '+fileName,3000);
     progLbl.textContent='Selesai — '+text;
     fileInput.value=''; nameInput.value='';
@@ -587,7 +587,7 @@ window.uploadAudioFile = async function(){
   btn.disabled=false; btn.textContent='Upload ke ESP32';
   setTimeout(()=>{progWrap.classList.remove('show');},4000);
 };
-
+ 
 // ═══════════════════════════════════════════════════════════════
 // KEGIATAN
 // ═══════════════════════════════════════════════════════════════
@@ -660,7 +660,7 @@ window.pushJSON = async function(){
   }
   setTimeout(()=>{b.textContent='Kirim ke Firebase';b.disabled=false;},2000);
 };
-
+ 
 window.downloadBackup = async function(){
   try{
     const [jSnap,kSnap]=await Promise.all([
@@ -675,7 +675,7 @@ window.downloadBackup = async function(){
     toast('Backup diunduh',3000);
   }catch(e){ toast('Gagal mengunduh backup — cek koneksi'); }
 };
-
+ 
 window.restoreBackup = async function(input){
   const file=input.files[0];if(!file) return;
   const statusEl=document.getElementById('restoreStatus');
@@ -693,7 +693,7 @@ window.restoreBackup = async function(input){
   }catch(e){statusEl.textContent='File JSON tidak valid';statusEl.style.color='var(--red-text)';}
   input.value='';
 };
-
+ 
 // ═══════════════════════════════════════════════════════════════
 // INIT (dipanggil setelah login berhasil)
 // ═══════════════════════════════════════════════════════════════
@@ -708,3 +708,4 @@ function startApp(){
   setInterval(updateClock,1000);
   setInterval(refreshChips,5000);
 }
+ 
