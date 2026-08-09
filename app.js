@@ -603,12 +603,12 @@ function renderKegiatan(){
     const tr=document.createElement('tr');
     tr.innerHTML=`
       <td style="text-align:center;color:var(--text2);font-size:12px">${i+1}</td>
-      <td><input type="text" value="${k.nama}" placeholder="Nama kegiatan" onchange="kegiatanList[${i}].nama=this.value"></td>
+      <td><input type="text" value="${k.nama}" placeholder="Nama kegiatan" oninput="kegiatanList[${i}].nama=this.value"></td>
       <td style="text-align:center"><button class="btn btn-sm btn-d" onclick="delKegiatan(${i})">&#x2715;</button></td>`;
     tbody.appendChild(tr);
   });
 }
-
+ 
 window.addKegiatan = function(){
   kegiatanList.push({nama:''});
   renderKegiatan();
@@ -616,7 +616,7 @@ window.addKegiatan = function(){
   if(inputs.length) inputs[inputs.length-1].focus();
 };
 window.delKegiatan = function(i){kegiatanList.splice(i,1);renderKegiatan();};
-
+ 
 window.saveKegiatan = async function(){
   const btn=event.target;
   kegiatanList=kegiatanList.filter(k=>k.nama.trim()!=='');
@@ -632,7 +632,7 @@ window.saveKegiatan = async function(){
   }
   setTimeout(()=>{btn.textContent='Simpan';btn.disabled=false;},2000);
 };
-
+ 
 // ═══════════════════════════════════════════════════════════════
 // JSON — backup / restore langsung dari Firebase
 // ═══════════════════════════════════════════════════════════════
