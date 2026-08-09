@@ -35,6 +35,36 @@ const OFFLINE_THRESHOLD_MS = 20000;
 // ═══════════════════════════════════════════════════════════════
 // LOGIN
 // ═══════════════════════════════════════════════════════════════
+// Sesi login BERTAHAN saat halaman di-refresh (tidak perlu klik "Masuk" lagi
+// selama masih aktif), TAPI otomatis logout kalau tidak ada aktivitas sama
+// sekali selama IDLE_TIMEOUT_MS — jadi kalau ditinggal beberapa menit,
+// saat kembali harus login ulang.
+const IDLE_TIMEOUT_MS = 5 * 60 * 1000;   // 5 menit tanpa aktivitas → logout otomatis
+const LAST_ACTIVE_KEY = 'belOnline_lastActive';
+ 
+function markActive(){
+  try{ localStorage.setItem(LAST_ACTIVE_KEY, String(Date.now())); }catch(e){}
+}
+function getLastActive(){
+  try{ return parseInt(localStorage.getItem(LAST_ACTIVE_KEY)||'0',10); }catch(e){ return 0; }
+}
+function isIdleExpired(){
+  const last = getLastActive();
+  return last>0 && (Date.now()-last) > IDLE_TIMEOUT_MS;
+}
+ 
+// Catat aktivitas pengguna (klik/ketik/geser) supaya penghitung idle ke-reset
+['click','keydown','mousemove','touchstart'].forEach(evt=>
+  document.addEventListener(evt, markActive, {passive:true})
+);
+ 
+// Cek berkala selagi tab tetap terbuka — kalau idle terlalu lama, paksa logout
+setInterval(()=>{
+  if(auth.currentUser && isIdleExpired()) signOut(auth);
+}, 15000);
+ 
+setPersistence(auth, browserLocalPersistence);
+ 
 window.doLogin = async function () {
   const email = document.getElementById('loginEmail').value.trim();
   const pass  = document.getElementById('loginPass').value;
@@ -42,12 +72,14 @@ window.doLogin = async function () {
   errEl.textContent = '';
   try {
     await signInWithEmailAndPassword(auth, email, pass);
+    markActive();
   } catch (e) {
     errEl.textContent = 'Login gagal — cek email/password.';
   }
 };
  
 window.doLogout = async function () {
+  try{ localStorage.removeItem(LAST_ACTIVE_KEY); }catch(e){}
   await signOut(auth);
 };
  
@@ -59,7 +91,13 @@ document.addEventListener('DOMContentLoaded', ()=>{
 });
  
 onAuthStateChanged(auth, (user) => {
+  if (user && isIdleExpired()) {
+    // Sesi lama masih tersimpan browser, tapi sudah idle terlalu lama → paksa logout
+    signOut(auth);
+    return;   // onAuthStateChanged akan terpanggil lagi dengan user=null
+  }
   if (user) {
+    markActive();
     document.getElementById('loginScreen').classList.add('hidden');
     document.getElementById('mainApp').classList.remove('hidden');
     startApp();
