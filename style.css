@@ -185,6 +185,10 @@ input:focus,select:focus{outline:none;border-color:var(--blue)}
 .backup-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .json-actions-row{margin-bottom:1rem;flex-wrap:wrap;gap:8px}
 
+/* Loading Screen*/
+.loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center}
+.loading-text{color:var(--text2);font-size:13px;letter-spacing:.5px}
+
 /* Login screen */
 .login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:1rem}
 .login-wrap{display:flex;flex-direction:column;align-items:center;width:100%;max-width:320px}
