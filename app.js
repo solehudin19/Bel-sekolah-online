@@ -603,7 +603,7 @@ function renderKegiatan(){
     const tr=document.createElement('tr');
     tr.innerHTML=`
       <td style="text-align:center;color:var(--text2);font-size:12px">${i+1}</td>
-      <td><input type="text" value="${k.nama}" placeholder="Nama kegiatan" oninput="kegiatanList[${i}].nama=this.value"></td>
+      <td><input type="text" value="${k.nama}" placeholder="Nama kegiatan" oninput="updateKegiatanNama(${i},this.value)"></td>
       <td style="text-align:center"><button class="btn btn-sm btn-d" onclick="delKegiatan(${i})">&#x2715;</button></td>`;
     tbody.appendChild(tr);
   });
@@ -614,6 +614,9 @@ window.addKegiatan = function(){
   renderKegiatan();
   const inputs=document.querySelectorAll('#kegiatanTbody input[type=text]');
   if(inputs.length) inputs[inputs.length-1].focus();
+};
+window.updateKegiatanNama = function(i, val){
+  if(kegiatanList[i]) kegiatanList[i].nama = val;
 };
 window.delKegiatan = function(i){kegiatanList.splice(i,1);renderKegiatan();};
  
