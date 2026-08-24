@@ -14,15 +14,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14
 .wrap{max-width:760px;margin:0 auto;padding:1rem}
 .hidden{display:none !important}
 
-/* Brand — nama pesantren, garis pembatas di atas & bawah teks */
-.brand{
-  text-align:center;color:var(--text);font-weight:600;letter-spacing:1.5px;
-  padding:12px 0;
-  border-top:.5px solid var(--border);
-  border-bottom:.5px solid var(--border);
-}
-.brand-login{font-size:13px;margin-bottom:16px;width:100%}
-.brand-app{font-size:13px;margin-bottom:14px}
+/* Brand — nama pesantren, garis pembatas (hr) di atas & bawah teks */
+.brand-hr{border:none;border-top:.5px solid var(--border2);margin:0}
+.brand-text{text-align:center;color:var(--text);font-weight:600;letter-spacing:1.5px;padding:10px 0;font-size:13px}
+.brand-login{width:100%;margin-bottom:16px}
+.brand-app{margin-bottom:14px}
 
 /* Header */
 .header{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:.5px solid var(--border)}
@@ -31,20 +27,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14
 .subtitle{font-size:11px;color:var(--text2);margin-top:1px}
 .conn-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;box-shadow:0 0 4px var(--green)}
 .conn-lbl{font-size:12px;color:var(--text2)}
-
-.title1{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  margin-bottom:1.25rem;
-  padding-bottom:1rem;
-  border-bottom:.5px solid var(--border)
-}
-.title2{
-  display:flex;
-  font-size: 26px;
-}
 
 /* Small status dots (reusable) */
 .dot-sm{width:6px;height:6px;border-radius:50%;background:#4b5563;flex-shrink:0}
@@ -125,7 +107,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14
 .btn-ring:hover{background:var(--bg3)}
 
 /* Form inputs */
-input[type=time],input[type=text],input[type=email],input[type=password],input[type=file],select{
+input[type=time],input[type=text],input[type=email],input[type=password],input[type=file],input[type=number],select{
   border:.5px solid var(--border2);border-radius:var(--radius);padding:5px 8px;font-size:12px;
   background:var(--bg3);color:var(--text);font-family:var(--sans);width:100%
 }
@@ -185,7 +167,7 @@ input:focus,select:focus{outline:none;border-color:var(--blue)}
 .backup-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .json-actions-row{margin-bottom:1rem;flex-wrap:wrap;gap:8px}
 
-/* Loading Screen*/
+/* Loading screen (transisi netral sebelum status login dipastikan) */
 .loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center}
 .loading-text{color:var(--text2);font-size:13px;letter-spacing:.5px}
 
