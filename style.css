@@ -15,10 +15,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14
 .hidden{display:none !important}
 
 /* Brand — nama pesantren, garis pembatas (hr) di atas & bawah teks */
-.brand-hr{border:none;border-top:.5px solid var(--border2);margin:0}
-.brand-text{text-align:center;color:var(--text);font-weight:600;letter-spacing:1.5px;padding:10px 0;font-size:13px}
-.brand-login{width:100%;margin-bottom:16px}
-.brand-app{margin-bottom:14px}
+.title1{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin-bottom:1.25rem;
+  padding-bottom:1rem;
+  border-bottom:.5px solid var(--border)
+}
+.title2{
+  display:flex;
+  font-size: 26px;
+}
 
 /* Header */
 .header{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:.5px solid var(--border)}
