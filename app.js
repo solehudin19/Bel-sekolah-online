@@ -33,6 +33,40 @@ const KOMPLEK = [
 const OFFLINE_THRESHOLD_MS = 20000;
 
 // ═══════════════════════════════════════════════════════════════
+// FIREBASE INIT
+// ═══════════════════════════════════════════════════════════════
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getDatabase, ref, set, get, onValue, off
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+// ⚠️ GANTI dengan config project Firebase Anda sendiri
+// (Firebase Console → Project settings → Your apps → SDK setup and configuration)
+const firebaseConfig = {
+  apiKey: "AIzaSyBG1wMzXqRDK5fEKfosIvuRUjTQ620s-Go",
+  authDomain: "bel-sekolah-otomatis.firebaseapp.com",
+  databaseURL: "https://bel-sekolah-otomatis-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "bel-sekolah-otomatis",
+};
+
+const fbApp  = initializeApp(firebaseConfig);
+const auth   = getAuth(fbApp);
+const db     = getDatabase(fbApp);
+
+// ── 4 komplek — id HARUS SAMA PERSIS dengan DEVICE_ID di firmware ──
+const KOMPLEK = [
+  { id: "komplek1", nama: "Komplek SMA",    localIp: "192.168.0.102" },
+  { id: "komplek2", nama: "Komplek SMP",    localIp: "" },
+  { id: "komplek3", nama: "Komplek Akhwat", localIp: "" },
+  { id: "komplek4", nama: "Komplek MI",     localIp: "" },
+];
+
+const OFFLINE_THRESHOLD_MS = 20000;
+
+// ═══════════════════════════════════════════════════════════════
 // LOGIN
 // ═══════════════════════════════════════════════════════════════
 // Sesi login BERTAHAN saat halaman di-refresh (tidak perlu klik "Masuk" lagi
@@ -227,6 +261,7 @@ function subscribeDevice(id){
       schedule[i]=Array.isArray(arr)?arr.map(e=>({
         time:e.jam||'00:00', label:e.kegiatan||'-',
         track: typeof e.audio==='number'?e.audio:parseInt(e.audio)||1,
+        ulang: parseInt(e.ulang)||1, jeda: parseInt(e.jeda)||0,
         active:true, done:isDone(i,e.jam)
       })):[];
     });
@@ -402,7 +437,7 @@ function renderEdit(){
   const entries=schedule[activeDay]||[];
   tbody.innerHTML='';
   if(!entries.length){
-    tbody.innerHTML=`<tr><td colspan="5" style="text-align:center;color:var(--text2);padding:1.5rem;font-size:13px">Belum ada jadwal. Klik "+ Tambah bel"</td></tr>`;
+    tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;color:var(--text2);padding:1.5rem;font-size:13px">Belum ada jadwal. Klik "+ Tambah bel"</td></tr>`;
     return;
   }
   entries.forEach((e,i)=>{
@@ -445,9 +480,25 @@ function renderEdit(){
     });
     selTrack.onchange=()=>{ schedule[activeDay][i].track=+selTrack.value; };
     tdTrack.appendChild(selTrack);
- 
+
+    const tdUlang=document.createElement('td');
+    const inpUlang=document.createElement('input');
+    inpUlang.type='number'; inpUlang.min='1'; inpUlang.max='10';
+    inpUlang.value=e.ulang||1;
+    inpUlang.disabled=!e.active;
+    inpUlang.oninput=()=>{ schedule[activeDay][i].ulang=Math.max(1,parseInt(inpUlang.value)||1); inpJeda.disabled=!e.active||schedule[activeDay][i].ulang<=1; };
+    tdUlang.appendChild(inpUlang);
+
+    const tdJeda=document.createElement('td');
+    const inpJeda=document.createElement('input');
+    inpJeda.type='number'; inpJeda.min='0'; inpJeda.max='300'; inpJeda.step='1';
+    inpJeda.value=e.jeda||0;
+    inpJeda.disabled=!e.active || (e.ulang||1)<=1;
+    inpJeda.oninput=()=>{ schedule[activeDay][i].jeda=Math.max(0,parseInt(inpJeda.value)||0); };
+    tdJeda.appendChild(inpJeda);
+
     const tdChk=document.createElement('td');
-    tdChk.style.textAlign='center';
+    tdChk.className='ta-center';
     const chk=document.createElement('input');
     chk.type='checkbox'; chk.checked=e.active;
     chk.onchange=()=>{
@@ -456,18 +507,20 @@ function renderEdit(){
       inpJam.disabled=!chk.checked;
       selKeg.disabled=!chk.checked;
       selTrack.disabled=!chk.checked;
+      inpUlang.disabled=!chk.checked;
+      inpJeda.disabled=!chk.checked || (schedule[activeDay][i].ulang||1)<=1;
       renderDayTabs();
     };
     tdChk.appendChild(chk);
- 
+
     const tdDel=document.createElement('td');
     const btnDel=document.createElement('button');
     btnDel.className='btn btn-sm btn-d';
     btnDel.innerHTML='&#x2715;';
     btnDel.onclick=()=>delEntry(i);
     tdDel.appendChild(btnDel);
- 
-    tr.append(tdJam,tdKeg,tdTrack,tdChk,tdDel);
+
+    tr.append(tdJam,tdKeg,tdTrack,tdUlang,tdJeda,tdChk,tdDel);
     tbody.appendChild(tr);
   });
 }
@@ -476,7 +529,7 @@ function sortEntries(){schedule[activeDay].sort((a,b)=>a.time.localeCompare(b.ti
 window.addEntry = function(){
   if(!schedule[activeDay]) schedule[activeDay]=[];
   const defLabel=kegiatanList.length?kegiatanList[0].nama:'';
-  schedule[activeDay].push({time:'08:00',label:defLabel,track:1,active:true,done:false});
+  schedule[activeDay].push({time:'08:00',label:defLabel,track:1,ulang:1,jeda:0,active:true,done:false});
   renderEdit();renderDayTabs();
 };
 window.delEntry = function(i){schedule[activeDay].splice(i,1);renderEdit();renderDayTabs();};
@@ -493,7 +546,7 @@ window.clearDay = function(){
  
 function scheduleToJadwalObj(){
   const out={};
-  DAYS.forEach((d,i)=>{ out[d]=(schedule[i]||[]).map(e=>({jam:e.time,kegiatan:e.label,audio:e.track})); });
+  DAYS.forEach((d,i)=>{ out[d]=(schedule[i]||[]).map(e=>({jam:e.time,kegiatan:e.label,audio:e.track,ulang:e.ulang||1,jeda:e.jeda||0})); });
   return out;
 }
  
