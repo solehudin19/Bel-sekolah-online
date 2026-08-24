@@ -1,4 +1,3 @@
-
 // ═══════════════════════════════════════════════════════════════
 // FIREBASE INIT
 // ═══════════════════════════════════════════════════════════════
@@ -27,7 +26,7 @@ const db     = getDatabase(fbApp);
 const KOMPLEK = [
   { id: "komplek1", nama: "Komplek SMA",    localIp: "192.168.0.102" },
   { id: "komplek2", nama: "Komplek SMP",    localIp: "" },
-  { id: "komplek3", nama: "Komplek Akhwat", localIp: "" },
+  { id: "komplek3", nama: "Komplek Akhwat", localIp: "192.168.0.185" },
   { id: "komplek4", nama: "Komplek MI",     localIp: "" },
 ];
 
@@ -166,16 +165,8 @@ window.selectKomplek = function(id){
   currentId=id;
   refreshChips();
   subscribeDevice(id);
-  fillUploadIp();
   toast('Beralih ke '+ (KOMPLEK.find(k=>k.id===id)||{}).nama);
 };
- 
-function fillUploadIp(){
-  const ipInput=document.getElementById('uploadIp');
-  if(!ipInput) return;
-  const k=KOMPLEK.find(k=>k.id===currentId);
-  ipInput.value = (k && k.localIp) || '';
-}
  
 // ═══════════════════════════════════════════════════════════════
 // SUBSCRIBE DATA REALTIME UNTUK KOMPLEK AKTIF
@@ -584,69 +575,6 @@ window.applyVolume = async function(){
   setTimeout(()=>{btn.textContent='Terapkan volume';btn.disabled=false;},1800);
 };
  
-// ── Upload MP3 baru — LANGSUNG ke ESP32 lewat WiFi lokal ─────────
-// (Anda harus terhubung ke WiFi sekolah yang sama dengan ESP32 saat upload)
-function getAudioDuration(file){
-  return new Promise((resolve)=>{
-    const url=URL.createObjectURL(file);
-    const a=new Audio();
-    a.preload='metadata';
-    a.onloadedmetadata=()=>{ URL.revokeObjectURL(url); resolve(Math.round(a.duration)||180); };
-    a.onerror=()=>{ URL.revokeObjectURL(url); resolve(180); };  // fallback 180s kalau gagal baca metadata
-    a.src=url;
-  });
-}
- 
-window.uploadAudioFile = async function(){
-  const fileInput=document.getElementById('uploadFile');
-  const nameInput=document.getElementById('uploadName');
-  const ipInput=document.getElementById('uploadIp');
-  const file=fileInput.files[0];
-  if(!file){ toast('Pilih file MP3 dulu'); return; }
-  if(!file.name.toLowerCase().endsWith('.mp3')){ toast('Hanya file .mp3 yang didukung'); return; }
-  if(file.size > 8*1024*1024){ toast('Ukuran file terlalu besar (maks 8MB)'); return; }
-  const ip=ipInput.value.trim();
-  if(!ip){ toast('Isi dulu IP lokal ESP32 (lihat Serial Monitor)'); return; }
- 
-  const displayName = nameInput.value.trim() || file.name.replace(/\.mp3$/i,'');
-  const nextNum = TRACKS.length + 1;
-  const fileName = String(nextNum).padStart(3,'0')+'.mp3';
- 
-  const btn=event.target;
-  const progWrap=document.getElementById('uploadProgWrap');
-  const progLbl=document.getElementById('uploadProgLbl');
-  progWrap.classList.add('show');
- 
-  btn.disabled=true; btn.textContent='Membaca durasi...';
-  const dur = await getAudioDuration(file);
- 
-  btn.textContent='Mengunggah ke ESP32...';
-  progLbl.textContent='Mengirim '+fileName+' ke '+ip+' ...';
- 
-  try{
-    const fd=new FormData();
-    fd.append('file', file, fileName);   // nama field 'file' HARUS cocok dgn firmware; nama file jadi target di SD
- 
-    const res=await fetch(`http://${ip}/upload-audio`, { method:'POST', body:fd });
-    const text=await res.text();
- 
-    if(!res.ok){ throw new Error(text||('HTTP '+res.status)); }
- 
-    // Upload ke ESP32 berhasil → catat metadata di Firebase supaya dashboard & LCD ikut update
-    const newTracks=[...TRACKS, {file:fileName, name:displayName, dur}];
-    await set(ref(db, `devices/${currentId}/audio`), newTracks);
- 
-    toast('Upload berhasil: '+fileName,3000);
-    progLbl.textContent='Selesai — '+text;
-    fileInput.value=''; nameInput.value='';
-  }catch(e){
-    toast('Upload gagal: '+e.message+' — pastikan Anda di WiFi yang sama dengan ESP32');
-    progLbl.textContent='Gagal: '+e.message;
-  }
-  btn.disabled=false; btn.textContent='Upload ke ESP32';
-  setTimeout(()=>{progWrap.classList.remove('show');},4000);
-};
- 
 // ═══════════════════════════════════════════════════════════════
 // KEGIATAN
 // ═══════════════════════════════════════════════════════════════
@@ -764,7 +692,6 @@ function startApp(){
   appStarted=true;
   buildKomplekSelector();
   subscribeDevice(currentId);
-  fillUploadIp();
   renderTracks();
   updateClock();
   setInterval(updateClock,1000);
