@@ -3,20 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sistem Bel Otomatis Online</title>
+<title>Sistem Bel Otomatis — Online</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- Loading Screen -->
+<!-- Layar loading (tampil sebentar sebelum Firebase memastikan status login) -->
 <div class="loading-screen" id="loadingScreen">
   <div class="loading-text">Memuat...</div>
 </div>
-  
+
 <!-- Layar login -->
-<div class="login-screen" id="loginScreen">
+<div class="login-screen hidden" id="loginScreen">
   <div class="login-wrap">
-    <div class="brand brand-login">Pondok Pesantren Al-Hidayah</div>
+    <div class="brand-login">
+      <hr class="brand-hr">
+      <div class="brand-text">Pondok Pesantren Al-Hidayah</div>
+      <hr class="brand-hr">
+    </div>
     <div class="login-box">
       <div class="title">Sistem Bel Otomatis</div>
       <div class="subtitle">Masuk untuk mengelola 4 komplek</div>
@@ -36,7 +40,7 @@
   <div class="header">
     <div>
       <div class="title">Sistem Bel Otomatis</div>
-      <div class="subtitle">Kontrol online.Firebase Realtime</div>
+      <div class="subtitle">Kontrol online — Firebase Realtime</div>
     </div>
     <div class="header-actions">
       <div class="conn-dot" id="connDot"></div>
@@ -46,8 +50,10 @@
   </div>
 
   <!-- Nama pesantren -->
-  <div class="title1">
-    <div class="title2"> Pondok Pesantren Al-Hidayah</div>
+  <div class="brand-app">
+    <hr class="brand-hr">
+    <div class="brand-text">Pondok Pesantren Al-Hidayah</div>
+    <hr class="brand-hr">
   </div>
 
   <!-- Selector komplek -->
@@ -135,6 +141,8 @@
           <th class="w-90">Jam</th>
           <th class="w-140">Keterangan</th>
           <th class="w-120">Track audio</th>
+          <th class="w-60 ta-center">Ulang</th>
+          <th class="w-60 ta-center">Jeda(s)</th>
           <th class="w-50 ta-center">Aktif</th>
           <th class="w-36"></th>
         </tr></thead>
@@ -172,7 +180,7 @@
   <div class="panel" id="tab-audio">
     <div class="audio-grid">
       <div>
-        <div class="sec-title">Daftar Audio</div>
+        <div class="sec-title">DFPlayer Mini (perintah dikirim ke ESP32 via Firebase)</div>
         <div class="dfplayer" id="dfPanel"></div>
         <div class="audio-progress-row">
           <div class="audio-time-row">
@@ -200,7 +208,7 @@
         <div class="sec-title warn mt">Upload MP3 baru</div>
         <div class="card">
           <div class="upload-warn">
-            ⚠️ Khusus fitur ini harus terhubung ke WiFi sekolah yang sama dengan ESP32 komplek ini.
+            ⚠️ Khusus fitur ini perlu terhubung ke WiFi sekolah yang sama dengan ESP32 komplek ini.
           </div>
           <div class="field">
             <div class="field-label">IP lokal ESP32 (lihat Serial Monitor)</div>
