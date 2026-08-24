@@ -1,4 +1,4 @@
-*{box-sizing:border-box;margin:0;padding:0}
+{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#0f1117;--bg2:#1a1d27;--bg3:#222535;--bg4:#2a2d3e;
   --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
@@ -14,7 +14,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14
 .wrap{max-width:760px;margin:0 auto;padding:1rem}
 .hidden{display:none !important}
 
-/* Brand — nama pesantren, garis pembatas (hr) di atas & bawah teks */
+/*  nama pesantren */
 .title1{
   display:flex;
   align-items:center;
