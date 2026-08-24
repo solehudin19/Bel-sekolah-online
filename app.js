@@ -24,40 +24,6 @@ const db     = getDatabase(fbApp);
 
 // ── 4 komplek — id HARUS SAMA PERSIS dengan DEVICE_ID di firmware ──
 const KOMPLEK = [
-  { id: "komplek1", nama: "Komplek SMA",localIp: "192.168.0.102" },
-  { id: "komplek2", nama: "Komplek SMP",localIp: "192.168.0.102" },
-  { id: "komplek3", nama: "Komplek Akhwat",localIp: "192.168.0.102" },
-  { id: "komplek4", nama: "Komplek MI",localIp: "192.168.0.102" },
-];
-
-const OFFLINE_THRESHOLD_MS = 20000;
-
-// ═══════════════════════════════════════════════════════════════
-// FIREBASE INIT
-// ═══════════════════════════════════════════════════════════════
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {
-  getDatabase, ref, set, get, onValue, off
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-// ⚠️ GANTI dengan config project Firebase Anda sendiri
-// (Firebase Console → Project settings → Your apps → SDK setup and configuration)
-const firebaseConfig = {
-  apiKey: "AIzaSyBG1wMzXqRDK5fEKfosIvuRUjTQ620s-Go",
-  authDomain: "bel-sekolah-otomatis.firebaseapp.com",
-  databaseURL: "https://bel-sekolah-otomatis-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "bel-sekolah-otomatis",
-};
-
-const fbApp  = initializeApp(firebaseConfig);
-const auth   = getAuth(fbApp);
-const db     = getDatabase(fbApp);
-
-// ── 4 komplek — id HARUS SAMA PERSIS dengan DEVICE_ID di firmware ──
-const KOMPLEK = [
   { id: "komplek1", nama: "Komplek SMA",    localIp: "192.168.0.102" },
   { id: "komplek2", nama: "Komplek SMP",    localIp: "" },
   { id: "komplek3", nama: "Komplek Akhwat", localIp: "" },
