@@ -696,3 +696,4 @@ function startApp(){
   updateClock();
   setInterval(updateClock,1000);
   setInterval(refreshChips,5000);
+}
