@@ -14,7 +14,24 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14
 .wrap{max-width:760px;margin:0 auto;padding:1rem}
 .hidden{display:none !important}
 
-/* Brand — nama pesantren, garis pembatas (hr) di atas & bawah teks */
+/* Brand — nama pesantren, garis pembatas di atas & bawah teks */
+.brand{
+  text-align:center;color:var(--text);font-weight:600;letter-spacing:1.5px;
+  padding:12px 0;
+  border-top:.5px solid var(--border);
+  border-bottom:.5px solid var(--border);
+}
+.brand-login{font-size:13px;margin-bottom:16px;width:100%}
+.brand-app{font-size:13px;margin-bottom:14px}
+
+/* Header */
+.header{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:.5px solid var(--border)}
+.header-actions{margin-left:auto;display:flex;align-items:center;gap:6px}
+.title{font-size:17px;font-weight:500}
+.subtitle{font-size:11px;color:var(--text2);margin-top:1px}
+.conn-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;box-shadow:0 0 4px var(--green)}
+.conn-lbl{font-size:12px;color:var(--text2)}
+
 .title1{
   display:flex;
   align-items:center;
@@ -28,14 +45,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14
   display:flex;
   font-size: 26px;
 }
-
-/* Header */
-.header{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:.5px solid var(--border)}
-.header-actions{margin-left:auto;display:flex;align-items:center;gap:6px}
-.title{font-size:17px;font-weight:500}
-.subtitle{font-size:11px;color:var(--text2);margin-top:1px}
-.conn-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;box-shadow:0 0 4px var(--green)}
-.conn-lbl{font-size:12px;color:var(--text2)}
 
 /* Small status dots (reusable) */
 .dot-sm{width:6px;height:6px;border-radius:50%;background:#4b5563;flex-shrink:0}
@@ -92,21 +101,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14
 /* Table */
 .tbl{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
 .tbl th{font-size:11px;color:var(--text2);font-weight:500;text-align:left;padding:6px 8px;border-bottom:.5px solid var(--border2)}
-.tbl td{padding:7px 8px;border-bottom:none;vertical-align:middle;overflow:hidden;text-overflow:ellipsis}
+.tbl td{padding:7px 8px;border-bottom:.5px solid var(--border);vertical-align:middle;overflow:hidden;text-overflow:ellipsis}
 .tbl tr:last-child td{border-bottom:none}
 .tbl tr:hover td{background:var(--bg3)}
 .tbl.tbl-fixed{table-layout:fixed}
-.col-aktif{display:flex;align-items:center;justify-content:center;gap:6px}
-.col-aktif .btn-d{padding:2px 7px}
 
 /* Column width utilities (dipakai di header tabel) */
-.w-36{width:36px}.w-40{width:40px}.w-50{width:50px}.w-60{width:60px}.w-70{width:70px}
-.w-80{width:80px}.w-90{width:90px}.w-110{width:110px}.w-120{width:120px}.w-130{width:130px}.w-140{width:140px}
+.w-36{width:36px}.w-40{width:40px}.w-50{width:50px}.w-60{width:60px}
+.w-80{width:80px}.w-90{width:90px}.w-120{width:120px}.w-130{width:130px}.w-140{width:140px}
 .ta-center{text-align:center}
-
-/* Bungkus tabel supaya bisa scroll horizontal di layar sempit, bukan terpotong */
-.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.tbl-scroll .tbl{min-width:540px}
 
 /* Buttons */
 .btn{background:transparent;border:.5px solid var(--border2);border-radius:var(--radius);padding:6px 14px;cursor:pointer;font-size:13px;color:var(--text);font-family:var(--sans)}
@@ -122,24 +125,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14
 .btn-ring:hover{background:var(--bg3)}
 
 /* Form inputs */
-input[type=time],input[type=text],input[type=email],input[type=password],input[type=file],input[type=number],select{
+input[type=time],input[type=text],input[type=email],input[type=password],input[type=file],select{
   border:.5px solid var(--border2);border-radius:var(--radius);padding:5px 8px;font-size:12px;
   background:var(--bg3);color:var(--text);font-family:var(--sans);width:100%
 }
 input:focus,select:focus{outline:none;border-color:var(--blue)}
 .row input[type=range]{flex:1}
 .hidden-input{display:none}
-
-/* Input angka (Ulang/Jeda) — rata tengah, tanpa spinner bawaan browser, tampilan konsisten */
-input[type=number]{text-align:center;-moz-appearance:textfield}
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
-
-/* Semua input/select nonaktif — tampilan redup konsisten, jangan andalkan gaya bawaan browser */
-input:disabled,select:disabled{
-  opacity:.4;background:var(--bg3);border-color:var(--border);
-  color:var(--text2);cursor:not-allowed;-webkit-text-fill-color:var(--text2)
-}
 
 /* Field group (label + input) */
 .field{margin-bottom:10px}
@@ -193,7 +185,7 @@ input:disabled,select:disabled{
 .backup-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .json-actions-row{margin-bottom:1rem;flex-wrap:wrap;gap:8px}
 
-/* Loading screen (transisi netral sebelum status login dipastikan) */
+/* Loading Screen*/
 .loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center}
 .loading-text{color:var(--text2);font-size:13px;letter-spacing:.5px}
 
@@ -217,3 +209,4 @@ input:disabled,select:disabled{
 /* Toast */
 .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--bg2);border:.5px solid var(--border2);border-radius:var(--radius);padding:10px 16px;font-size:13px;color:var(--text);box-shadow:0 4px 20px rgba(0,0,0,.5);transform:translateY(100px);opacity:0;transition:all .3s;z-index:999}
 .toast.show{transform:translateY(0);opacity:1}
+*/
