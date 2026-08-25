@@ -134,18 +134,19 @@
       <button class="btn btn-sm btn-d" onclick="clearDay()">Hapus semua</button>
     </div>
     <div class="card card-flush">
-      <table class="tbl tbl-fixed">
-        <thead><tr>
-          <th class="w-90">Jam</th>
-          <th class="w-140">Keterangan</th>
-          <th class="w-120">Track audio</th>
-          <th class="w-60 ta-center">Ulang</th>
-          <th class="w-60 ta-center">Jeda(s)</th>
-          <th class="w-50 ta-center">Aktif</th>
-          <th class="w-36"></th>
-        </tr></thead>
-        <tbody id="editTbody"></tbody>
-      </table>
+      <div class="tbl-scroll">
+        <table class="tbl tbl-fixed">
+          <thead><tr>
+            <th class="w-80">Jam</th>
+            <th class="w-120">Keterangan</th>
+            <th class="w-110">Track audio</th>
+            <th class="w-50 ta-center">Ulang</th>
+            <th class="w-50 ta-center">Jeda(s)</th>
+            <th class="w-70 ta-center">Aktif</th>
+          </tr></thead>
+          <tbody id="editTbody"></tbody>
+        </table>
+      </div>
     </div>
     <div class="hint-text">Tersimpan langsung ke <code>Firebase → devices/{komplek}/jadwal</code> — ESP32 menarik perubahan ini otomatis dalam beberapa detik.</div>
   </div>
