@@ -503,8 +503,8 @@ window.clearDay = function(){
 function scheduleToJadwalObj(){
   const out={};
   // -- ulang/jeda TIDAK DIPAKAI UNTUK SEKARANG, dikunci ke default (1x, tanpa jeda) --
-  // DAYS.forEach((d,i)=>{ out[d]=(schedule[i]||[]).map(e=>({jam:e.time,kegiatan:e.label,audio:e.track,ulang:e.ulang||1,jeda:e.jeda||0})); });
-  DAYS.forEach((d,i)=>{ out[d]=(schedule[i]||[]).map(e=>({jam:e.time,kegiatan:e.label,audio:e.track,ulang:1,jeda:0})); });
+  DAYS.forEach((d,i)=>{ out[d]=(schedule[i]||[]).map(e=>({jam:e.time,kegiatan:e.label,audio:e.track,ulang:e.ulang||1,jeda:e.jeda||0})); });
+  //DAYS.forEach((d,i)=>{ out[d]=(schedule[i]||[]).map(e=>({jam:e.time,kegiatan:e.label,audio:e.track,ulang:1,jeda:0})); });
   return out;
 }
  
