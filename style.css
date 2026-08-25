@@ -92,7 +92,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14
 /* Table */
 .tbl{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
 .tbl th{font-size:11px;color:var(--text2);font-weight:500;text-align:left;padding:6px 8px;border-bottom:.5px solid var(--border2)}
-.tbl td{padding:7px 8px;border-bottom:.5px solid var(--border);vertical-align:middle;overflow:hidden;text-overflow:ellipsis}
+.tbl td{padding:7px 8px;border-bottom:none;vertical-align:middle;overflow:hidden;text-overflow:ellipsis}
 .tbl tr:last-child td{border-bottom:none}
 .tbl tr:hover td{background:var(--bg3)}
 .tbl.tbl-fixed{table-layout:fixed}
