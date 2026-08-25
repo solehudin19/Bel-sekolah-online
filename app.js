@@ -26,11 +26,13 @@ const db     = getDatabase(fbApp);
 const KOMPLEK = [
   { id: "komplek1", nama: "Komplek SMA",    localIp: "192.168.0.102" },
   { id: "komplek2", nama: "Komplek SMP",    localIp: "" },
-  { id: "komplek3", nama: "Komplek Akhwat", localIp: "192.168.0.185" },
+  { id: "komplek3", nama: "Komplek Akhwat", localIp: "" },
   { id: "komplek4", nama: "Komplek MI",     localIp: "" },
 ];
 
 const OFFLINE_THRESHOLD_MS = 20000;
+
+
 
 // ═══════════════════════════════════════════════════════════════
 // LOGIN
@@ -395,7 +397,7 @@ function renderEdit(){
   const entries=schedule[activeDay]||[];
   tbody.innerHTML='';
   if(!entries.length){
-    tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;color:var(--text2);padding:1.5rem;font-size:13px">Belum ada jadwal. Klik "+ Tambah bel"</td></tr>`;
+    tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;color:var(--text2);padding:1.5rem;font-size:13px">Belum ada jadwal. Klik "+ Tambah bel"</td></tr>`;
     return;
   }
   entries.forEach((e,i)=>{
@@ -456,7 +458,7 @@ function renderEdit(){
     tdJeda.appendChild(inpJeda);
 
     const tdChk=document.createElement('td');
-    tdChk.className='ta-center';
+    tdChk.className='ta-center col-aktif';
     const chk=document.createElement('input');
     chk.type='checkbox'; chk.checked=e.active;
     chk.onchange=()=>{
@@ -469,16 +471,13 @@ function renderEdit(){
       inpJeda.disabled=!chk.checked || (schedule[activeDay][i].ulang||1)<=1;
       renderDayTabs();
     };
-    tdChk.appendChild(chk);
-
-    const tdDel=document.createElement('td');
     const btnDel=document.createElement('button');
     btnDel.className='btn btn-sm btn-d';
     btnDel.innerHTML='&#x2715;';
     btnDel.onclick=()=>delEntry(i);
-    tdDel.appendChild(btnDel);
+    tdChk.append(chk,btnDel);
 
-    tr.append(tdJam,tdKeg,tdTrack,tdUlang,tdJeda,tdChk,tdDel);
+    tr.append(tdJam,tdKeg,tdTrack,tdUlang,tdJeda,tdChk);
     tbody.appendChild(tr);
   });
 }
