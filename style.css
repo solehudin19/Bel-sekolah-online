@@ -15,19 +15,18 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14
 .hidden{display:none !important}
 
 /* Brand — nama pesantren, garis pembatas (hr) di atas & bawah teks */
+/* Nama pesantren — dipakai di halaman login & atas tab komplek */
 .title1{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  margin-bottom:1.25rem;
-  padding-bottom:1rem;
-  border-bottom:.5px solid var(--border)
+  display:flex;align-items:center;justify-content:center;
+  padding:12px 0;margin-bottom:1.25rem;
+  border-top:.5px solid var(--border);
+  border-bottom:.5px solid var(--border);
 }
 .title2{
-  display:flex;
-  font-size: 26px;
+  font-size:15px;font-weight:600;letter-spacing:1px;
+  color:var(--text);text-align:center;
 }
+
 /* Header */
 .header{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:.5px solid var(--border)}
 .header-actions{margin-left:auto;display:flex;align-items:center;gap:6px}
@@ -199,6 +198,7 @@ input:disabled,select:disabled{
 /* Login screen */
 .login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:1rem}
 .login-wrap{display:flex;flex-direction:column;align-items:center;width:100%;max-width:320px}
+.login-wrap .title1{width:100%}
 .login-box{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--radius-lg);padding:1.75rem;width:100%}
 .login-box .title{margin-bottom:2px}
 .login-box .subtitle{margin-bottom:1.25rem}
