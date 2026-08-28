@@ -24,14 +24,13 @@ const db     = getDatabase(fbApp);
 
 // ── 4 komplek — id HARUS SAMA PERSIS dengan DEVICE_ID di firmware ──
 const KOMPLEK = [
-  { id: "komplek1", nama: "Komplek SMA",    localIp: "192.168.0.102" },
-  { id: "komplek2", nama: "Komplek SMP",    localIp: "" },
-  { id: "komplek3", nama: "Komplek Akhwat", localIp: "" },
-  { id: "komplek4", nama: "Komplek MI",     localIp: "" },
+  { id: "komplek1", nama: "Komplek SMA" },
+  { id: "komplek2", nama: "Komplek SMP" },
+  { id: "komplek3", nama: "Komplek Akhwat" },
+  { id: "komplek4", nama: "Komplek MI" },
 ];
 
 const OFFLINE_THRESHOLD_MS = 20000;
-
 
 // ═══════════════════════════════════════════════════════════════
 // LOGIN
@@ -220,7 +219,6 @@ function subscribeDevice(id){
       schedule[i]=Array.isArray(arr)?arr.map(e=>({
         time:e.jam||'00:00', label:e.kegiatan||'-',
         track: typeof e.audio==='number'?e.audio:parseInt(e.audio)||1,
-        ulang: parseInt(e.ulang)||1, jeda: parseInt(e.jeda)||0,
         active:true, done:isDone(i,e.jam)
       })):[];
     });
@@ -440,24 +438,6 @@ function renderEdit(){
     selTrack.onchange=()=>{ schedule[activeDay][i].track=+selTrack.value; };
     tdTrack.appendChild(selTrack);
 
-    /* -- Kolom Ulang & Jeda: TIDAK DIPAKAI UNTUK SEKARANG --
-    const tdUlang=document.createElement('td');
-    const inpUlang=document.createElement('input');
-    inpUlang.type='number'; inpUlang.min='1'; inpUlang.max='10';
-    inpUlang.value=e.ulang||1;
-    inpUlang.disabled=!e.active;
-    inpUlang.oninput=()=>{ schedule[activeDay][i].ulang=Math.max(1,parseInt(inpUlang.value)||1); inpJeda.disabled=!e.active||schedule[activeDay][i].ulang<=1; };
-    tdUlang.appendChild(inpUlang);
-
-    const tdJeda=document.createElement('td');
-    const inpJeda=document.createElement('input');
-    inpJeda.type='number'; inpJeda.min='0'; inpJeda.max='300'; inpJeda.step='1';
-    inpJeda.value=e.jeda||0;
-    inpJeda.disabled=!e.active || (e.ulang||1)<=1;
-    inpJeda.oninput=()=>{ schedule[activeDay][i].jeda=Math.max(0,parseInt(inpJeda.value)||0); };
-    tdJeda.appendChild(inpJeda);
-    -- akhir blok Ulang & Jeda -- */
-
     const tdChk=document.createElement('td');
     tdChk.className='ta-center col-aktif';
     const chk=document.createElement('input');
@@ -485,7 +465,7 @@ function sortEntries(){schedule[activeDay].sort((a,b)=>a.time.localeCompare(b.ti
 window.addEntry = function(){
   if(!schedule[activeDay]) schedule[activeDay]=[];
   const defLabel=kegiatanList.length?kegiatanList[0].nama:'';
-  schedule[activeDay].push({time:'08:00',label:defLabel,track:1,ulang:1,jeda:0,active:true,done:false});   // ulang/jeda dikunci default, fitur nonaktif
+  schedule[activeDay].push({time:'08:00',label:defLabel,track:1,active:true,done:false});
   renderEdit();renderDayTabs();
 };
 window.delEntry = function(i){schedule[activeDay].splice(i,1);renderEdit();renderDayTabs();};
@@ -502,9 +482,7 @@ window.clearDay = function(){
  
 function scheduleToJadwalObj(){
   const out={};
-  // -- ulang/jeda TIDAK DIPAKAI UNTUK SEKARANG, dikunci ke default (1x, tanpa jeda) --
-  DAYS.forEach((d,i)=>{ out[d]=(schedule[i]||[]).map(e=>({jam:e.time,kegiatan:e.label,audio:e.track,ulang:e.ulang||1,jeda:e.jeda||0})); });
-  //DAYS.forEach((d,i)=>{ out[d]=(schedule[i]||[]).map(e=>({jam:e.time,kegiatan:e.label,audio:e.track,ulang:1,jeda:0})); });
+  DAYS.forEach((d,i)=>{ out[d]=(schedule[i]||[]).map(e=>({jam:e.time,kegiatan:e.label,audio:e.track})); });
   return out;
 }
  
