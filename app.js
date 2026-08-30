@@ -299,13 +299,35 @@ function isDone(dayIdx,jam){
   return bh*60+bm < nowMin-1;
 }
  
+// Cari bel berikutnya lintas hari — samakan dengan logika firmware
+// (updateNextSchedule di .ino): kalau hari ini sudah habis/kosong,
+// lompat ke hari berikutnya yang punya jadwal aktif.
+function findNextBell(){
+  for(let d=0; d<7; d++){
+    const dayIdx=(TODAY_IDX+d)%7;
+    const entries=(schedule[dayIdx]||[]).filter(e=>e.active);
+    if(!entries.length) continue;
+    let candidate;
+    if(d===0){
+      candidate=entries.find(e=>!e.done);
+    } else {
+      candidate=entries.slice().sort((a,b)=>a.time.localeCompare(b.time))[0];
+    }
+    if(candidate) return {entry:candidate, dayIdx, daysAhead:d};
+  }
+  return null;
+}
+
 function updateCountdown(now){
   const el=document.getElementById('nCountdown');
   if(!el) return;
-  const today=schedule[TODAY_IDX]||[];
-  const next=today.find(e=>e.active&&!e.done);
-  if(!next){el.textContent='Semua selesai hari ini';return;}
-  const [bh,bm]=next.time.split(':').map(Number);
+  const nb=findNextBell();
+  if(!nb){el.textContent='Belum ada jadwal';return;}
+  if(nb.daysAhead>0){
+    el.textContent = nb.daysAhead===1 ? 'besok' : DAYS[nb.dayIdx];
+    return;
+  }
+  const [bh,bm]=nb.entry.time.split(':').map(Number);
   const diff=bh*60+bm - (now.getHours()*60+now.getMinutes());
   if(diff<=0) el.textContent='Sekarang / lewat';
   else if(diff<60) el.textContent='dalam '+diff+' menit';
@@ -339,14 +361,14 @@ function renderDash(){
   document.getElementById('mLeft').textContent=active.length-done.length-(isRinging?1:0);
   document.getElementById('mNonaktif').textContent=nonaktif.length;
   document.getElementById('mBunyiCard').className='metric'+(isRinging?' metric-ring':'');
-  const next=today.find(e=>e.active&&!e.done);
-  if(next){
-    document.getElementById('nTime').textContent=next.time;
-    document.getElementById('nLabel').textContent=next.label;
-    document.getElementById('nTrack').textContent=trackName(next.track);
+  const nb=findNextBell();
+  if(nb){
+    document.getElementById('nTime').textContent=nb.entry.time;
+    document.getElementById('nLabel').textContent=nb.entry.label + (nb.daysAhead>0 ? ' ('+DAYS[nb.dayIdx]+')' : '');
+    document.getElementById('nTrack').textContent=trackName(nb.entry.track);
   } else {
     document.getElementById('nTime').textContent='--:--';
-    document.getElementById('nLabel').textContent='Semua selesai';
+    document.getElementById('nLabel').textContent='Belum ada jadwal';
     document.getElementById('nTrack').textContent='';
   }
   const tbody=document.getElementById('todayTbody');
@@ -362,8 +384,8 @@ function renderDash(){
  
 window.ringNow = async function(){
   const btn=event.target;
-  const next=(schedule[TODAY_IDX]||[]).find(e=>e.active&&!e.done);
-  const file=next?String(next.track).padStart(3,'0')+'.mp3':'001.mp3';
+  const nb=findNextBell();
+  const file=nb?String(nb.entry.track).padStart(3,'0')+'.mp3':'001.mp3';
   btn.textContent='Berbunyi...';btn.disabled=true;
   await sendCommand('ringNow',{file});
   toast('Perintah bunyi dikirim ke '+currentId);
